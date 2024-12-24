@@ -24,7 +24,20 @@ const PORT = process.env.PORT || 5000;
 
 app.use(
   cors({
-    origin: process.env.CLIENT_BASE_URL,
+    origin: (origin, callback) => {
+      // Allowed origins based on the environment
+      const allowedOrigins = [
+        "http://localhost:5173", // Local development
+        "https://mern-ecommerce-render-1.onrender.com", // Production deployed frontend
+      ];
+
+      // Allow the request if the origin is in the allowedOrigins list
+      if (allowedOrigins.includes(origin) || !origin) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: ["GET", "POST", "DELETE", "PUT"],
     allowedHeaders: [
       "Content-Type",
@@ -33,7 +46,7 @@ app.use(
       "Expires",
       "Pragma",
     ],
-    credentials: true,
+    credentials: true, // Required for cookies/credentials
   })
 );
 
@@ -49,6 +62,5 @@ app.use("/api/shop/order", shopOrderRouter);
 app.use("/api/shop/search", shopSearchRouter);
 app.use("/api/shop/review", shopReviewRouter);
 app.use("/api/common/feature", commonFeatureRouter);
-
 
 app.listen(PORT, () => console.log(`server is now running on port ${PORT}`));
