@@ -20,7 +20,7 @@ function AuthLogin() {
       if (data?.payload?.success) {
         toast.success("Successful", { title: data?.payload?.message });
       } else {
-        toast.error("Unable to register", { title: data?.payload?.message });
+        toast.error("Unable to login", { title: data?.payload?.message });
       }
     });
   }
